@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+:root {
+  --font-geist-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  /* fonts */
+}
+/* Base tokens – you can add more steps (50…900) if you like */
+
+/* Neutralize autofill background & text */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #111 !important; /* your text color */
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important; /* your bg color */
+  box-shadow: 0 0 0px 1000px #fff inset !important;
+  transition: background-color 9999s ease-in-out 0s; /* prevents brief flash */
+  caret-color: #111; /* caret matches text */
+}
+
+/* Firefox */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  box-shadow: 0 0 0px 1000px #fff inset !important; /* your bg color */
+  -moz-text-fill-color: #111 !important; /* your text color */
+  caret-color: #111;
+}
+
+/* Hide scrollbar but keep scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+html {
+  scroll-behavior: smooth;
+}
+@theme {
+  --color-neutral-0: #ffffff;
+  --color-neutral-900: #0b0b12;
+
+  /* Primary defaults (overridden at runtime) */
+  --color-primary-50: oklch(0.98 0.02 270);
+  --color-primary-100: oklch(0.96 0.03 270);
+  --color-primary-200: oklch(0.92 0.05 270);
+  --color-primary-300: oklch(0.86 0.07 270);
+  --color-primary-400: oklch(0.78 0.09 270);
+  --color-primary-500: oklch(0.72 0.1 270);
+  --color-primary-600: oklch(0.64 0.1 270);
+  --color-primary-700: oklch(0.55 0.09 270);
+  --color-primary-800: oklch(0.45 0.08 270);
+  --color-primary-900: oklch(0.35 0.07 270);
+
+  /* Secondary defaults (same idea) */
+  --color-secondary-500: oklch(0.72 0.1 40);
+
+  /* other themes */
+  --color-silver-light: #f7f6f9;
+  --color-auto-mid: #f5f0fa;
+  --color-silver-dark: #4f5e6e;
+
+  --color-red-light: #ffe0e0;
+  --color-red-dark: #a10000;
+
+  --color-yellow-light: #ffffcc;
+  --color-yellow-dark: #ffb600;
+
+  --color-green-light: #ebffeb;
+  --color-green-dark: #009900;
+}
+
+@theme inline {
+  --font-jost: "Jost";
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer utilities {
+  .white-bg {
+    @apply bg-white rounded-xl p-6;
+  }
+
+  .tech-container {
+    @apply border border-primary-500 rounded-xl p-3;
+  }
+
+  .bold-text {
+    @apply font-black;
+  }
+
+  .flex-row-center {
+    @apply flex flex-row items-center justify-center;
+  }
+
+  .flex-row-between {
+    @apply flex flex-row items-center justify-between;
+  }
+
+  .flex-rows {
+    @apply flex items-center;
+  }
+  .flex-row-start {
+    @apply flex flex-row items-start;
+  }
+
+  .flex-cols {
+    @apply flex flex-col;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .flex-col-between {
+    @apply flex flex-col items-center justify-between;
+  }
+
+  .grid-2 {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-4;
+  }
+  .grid-3 {
+    @apply grid md:grid-cols-2 lg:grid-cols-3 gap-4;
+  }
+  .grid-4 {
+    @apply grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+
+  .lay-bg {
+    @apply w-full max-w-[1536px] mx-auto;
+  }
+
+  .input-container {
+    @apply w-full min-h-12 px-4  border border-[#e3e5e5] rounded-lg;
+  }
+
+  .select-container {
+    @apply w-full min-h-[91px] bg-[#F8F8F8] px-4  border border-[#e2e4e9] rounded-lg flex items-center justify-between;
+  }
+
+  .text-input {
+    @apply w-full h-full min-h-12 rounded-lg text-base ring-0 border-0 focus:outline-none;
+  }
+
+  .trigger {
+    @apply inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm border border-white/15 text-white bg-black hover:bg-black/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60;
+  }
+
+  .border {
+    @apply border border-gray-200;
+  }
+
+  /* Optional helpers to theme scrollbars per element using your tokens */
+  .scrollbar-green {
+    --scrollbar-thumb: var(--color-green-main);
+  }
+  .scrollbar-yellow {
+    --scrollbar-thumb: var(--color-yellow-main);
+  }
+  .scrollbar-red {
+    --scrollbar-thumb: var(--color-red-main);
+  }
+  .scrollbar-track-light {
+    --scrollbar-track: var(--color-light-200);
+  }
+  .scrollbar-track-dark {
+    --scrollbar-track: var(--color-dark-600);
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scroll-mt-nav {
+    scroll-margin-top: 5rem;
+  }
+}
+
+/* Optional: panel chrome */
+.color-card {
+  --shadow-card: 0 12px 28px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+button {
+  cursor: pointer;
+}
+
+body {
+  font-family: var(--font-jost), sans-serif !important;
+}
