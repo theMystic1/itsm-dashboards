@@ -1,3 +1,4 @@
+import AdminSettings from "@/components/admin/settings";
 import dynamic from "next/dynamic";
 
 const ColorPaletteDialog = dynamic(
@@ -5,7 +6,7 @@ const ColorPaletteDialog = dynamic(
 );
 
 const Settings = () => {
-  return <ColorPaletteDialog />;
+  return <AdminSettings />;
 };
 
 export default Settings;

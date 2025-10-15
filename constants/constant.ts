@@ -692,3 +692,248 @@ export const dummyDashboardMetrics = [
     duration: "Since last month",
   },
 ];
+
+export const WorkFlowStageDummy = [
+  {
+    sn: 1,
+    name: "New",
+    editable: false,
+    triggerNot: true,
+  },
+  {
+    sn: 2,
+    name: "Assigned",
+    editable: true,
+    triggerNot: true,
+  },
+  {
+    sn: 3,
+    name: "In Progress",
+    editable: true,
+    triggerNot: true,
+  },
+  {
+    sn: 4,
+    name: "Waiting on Users",
+    editable: true,
+    triggerNot: true,
+  },
+  {
+    sn: 5,
+    name: "Resolved",
+    editable: false,
+    triggerNot: false,
+  },
+];
+
+export const SLATableDummy = [
+  {
+    name: "P1",
+    responseTime: "30 minutes",
+    resolutionTime: "4 hours",
+    notifyOnBreach: true,
+    id: 1,
+  },
+  {
+    name: "P2",
+    responseTime: "1 hour",
+    resolutionTime: "8 hours",
+    notifyOnBreach: true,
+    id: 3,
+  },
+  {
+    name: "P3",
+    responseTime: "4 hours",
+    resolutionTime: "24 hours",
+    notifyOnBreach: true,
+    id: 3,
+  },
+  {
+    name: "P4",
+    responseTime: "6 hours",
+    resolutionTime: "3 business days",
+    notifyOnBreach: true,
+    id: 4,
+  },
+];
+
+export const priorityLevelSetting = [
+  {
+    name: "P1",
+    level: "Critical",
+  },
+  {
+    name: "P2",
+    level: "High",
+  },
+  {
+    name: "P3",
+    level: "Medium",
+  },
+  {
+    name: "P4",
+    level: "Low",
+  },
+];
+
+export const prioritiesTicketsDummy = [
+  {
+    Priority: "P1",
+    Label: "Critical",
+    Description:
+      "Severe impact; system-wide outage or major security risk. Immediate attention required.",
+  },
+  {
+    Priority: "P2",
+    Label: "High",
+    Description:
+      "Significant impact; key features degraded or many users affected. Address as soon as possible.",
+  },
+  {
+    Priority: "P3",
+    Label: "Medium",
+    Description:
+      "Moderate impact; workarounds available or subset of users affected. Schedule for next iteration.",
+  },
+  {
+    Priority: "P4",
+    Label: "Low",
+    Description:
+      "Minor impact; cosmetic or informational. Triage and handle when capacity allows.",
+  },
+];
+
+export const accessMatrix = [
+  {
+    Role: "Admin",
+    AccessArea: "Dashboard",
+    Permissions: ["read", "write", "delete", "configure", "approve"],
+  },
+
+  {
+    Role: "Admin",
+    AccessArea: "Authentication",
+    Permissions: ["read", "write", "configure"],
+  },
+
+  { Role: "End User", AccessArea: "Dashboard", Permissions: ["read", "write"] },
+
+  {
+    Role: "Technician",
+    AccessArea: "Identity",
+    Permissions: ["read", "approve"],
+  },
+  { Role: "Team Lead", AccessArea: "Time Tracking", Permissions: ["read"] },
+
+  { Role: "Admin", AccessArea: "API", Permissions: ["read", "write,"] },
+];
+
+// constants/constant.ts (or wherever you export from)
+export const rulesById = [
+  {
+    ruleName: "Network Routing",
+    triggerConditions: "category = Network",
+    targetAssignment: "Networking Team",
+    escalation: "120 min -> Network Duty Manager",
+    status: true,
+  },
+  {
+    ruleName: "Critical Priority",
+    triggerConditions: "priority = P1",
+    targetAssignment: "On-Call Technician",
+    escalation: "60 min -> Incident Commander",
+    status: true,
+  },
+  {
+    ruleName: "Security Alerts to SOC",
+    triggerConditions: "category = Security",
+    targetAssignment: "SOC",
+    escalation: "15 min -> SOC Lead; 30 min -> CISO Delegate",
+    status: true,
+  },
+  {
+    ruleName: "Stale Ticket Nudge",
+    triggerConditions: "lastUpdateMins > 1440",
+    targetAssignment: "Current Assignee",
+    escalation: "60 min -> Queue Manager",
+    status: true,
+  },
+  {
+    ruleName: "Low Priority Auto-Queue",
+    triggerConditions: "priority = P4",
+    targetAssignment: "Backlog Triage",
+    escalation: "480 min -> Backlog Lead",
+    status: false,
+  },
+  {
+    ruleName: "Password Reset Flood",
+    triggerConditions: "category = Authentication + ticketsPerHour > 50",
+    targetAssignment: "Identity Ops",
+    escalation: "30 min -> Identity Manager",
+    status: true,
+  },
+] as const;
+
+
+export const integrations = [
+  {
+    tool: "Slack",
+    integrationType: "Chat/Alerts",
+    status: true,
+    Notes: "Routes P1 alerts to #incidents",
+  },
+  {
+    tool: "Jira",
+    integrationType: "Issue Tracker",
+    status: true,
+    Notes: "Creates linked issues for tickets",
+  },
+  {
+    tool: "ServiceNow",
+    integrationType: "ITSM",
+    status: false,
+    Notes: "Sandbox; awaiting API creds",
+  },
+  {
+    tool: "PagerDuty",
+    integrationType: "On-Call Paging",
+    status: true,
+    Notes: "Escalates after 10 mins",
+  },
+  {
+    tool: "Zendesk",
+    integrationType: "Support Desk",
+    status: false,
+    Notes: "Disabled during migration",
+  },
+  {
+    tool: "GitHub",
+    integrationType: "SCM",
+    status: true,
+    Notes: "Autolinks PRs to incidents",
+  },
+  {
+    tool: "Azure AD",
+    integrationType: "Identity",
+    status: true,
+    Notes: "Nightly user sync at 02:00",
+  },
+  {
+    tool: "Okta",
+    integrationType: "SSO/SAML",
+    status: false,
+    Notes: "SAML config pending review",
+  },
+  {
+    tool: "Email",
+    integrationType: "Ingestion",
+    status: true,
+    Notes: "Parses support@ mailbox",
+  },
+  {
+    tool: "Webhook",
+    integrationType: "Outbound Events",
+    status: true,
+    Notes: "Pushes updates to data lake",
+  },
+];

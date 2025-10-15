@@ -12,10 +12,17 @@ import {
   PieChart,
   Pie,
   Sector,
+  AreaChart,
+  Area,
 } from "recharts";
 import { TableOverflow } from "./table";
 import Dropdown from "./dropdown";
 import Text from "./text";
+import Cookies from "js-cookie";
+import StatusItem from "./status";
+import Image from "next/image";
+import { LOCAL_ICONS } from "@/constants/icons";
+import SlideToggler from "./slides-toggler";
 
 // ---------- Shared ----------
 type PriorityKey = "P1" | "P2" | "P3" | "P4";
@@ -38,11 +45,11 @@ const Dot = ({ color }: { color: string }) => (
   <span
     style={{
       display: "inline-block",
-      width: 10,
-      height: 10,
+      width: 6,
+      height: 6,
       borderRadius: 999,
       background: color,
-      marginRight: 8,
+      marginRight: 2,
     }}
   />
 );
@@ -128,9 +135,44 @@ const Callout = ({ x, y, text }: { x: number; y: number; text: string }) => {
   );
 };
 
-export function BacklogOfOverdueIncidents() {
+// 1) custom tick component (goes above your component)
+const XTickWithValue = (props: any) => {
+  const { x, y, payload, index } = props;
+  // assumes your BarChart `data` has { label, value }
+  const d = (props?.payload?.payload ?? {}) as {
+    label?: string;
+    value?: number;
+  };
+
   return (
-    <div className="tech-container h-[400px]">
+    <g transform={`translate(${x},${y})`}>
+      {/* category label */}
+      <text dy={14} textAnchor="middle" fontSize={12} fill="#111827">
+        {payload.value}
+      </text>
+      {/* value UNDER the axis */}
+      <text
+        dy={30}
+        textAnchor="middle"
+        fontSize={12}
+        fill="#6B7280"
+        fontWeight={600}
+      >
+        {d?.value ?? ""}
+      </text>
+    </g>
+  );
+};
+
+export function BacklogOfOverdueIncidents({
+  data,
+  fullLog,
+}: {
+  data?: any[];
+  fullLog: boolean;
+}) {
+  return (
+    <div className="tech-container min-h-[400px]">
       <div
         style={{
           display: "flex",
@@ -139,11 +181,15 @@ export function BacklogOfOverdueIncidents() {
         }}
         className=""
       >
-        <div>
+        <div
+          className={
+            fullLog ? "flex items-center justify-between gap-10" : "gap-0"
+          }
+        >
           <Text.SmallHeading className="text-lg font-semibold">
             Backlog of Overdue Incidents
           </Text.SmallHeading>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 text-xs">
             <div>
               <Dot color={COLORS.P4} />
               P4: Low
@@ -174,21 +220,29 @@ export function BacklogOfOverdueIncidents() {
               Category
             </Dropdown.Trigger>
           </Dropdown>
+
+          {fullLog && (
+            <SlideToggler
+              slides={["This Week", "This Year", "This Month"]}
+              key={"duration"}
+            />
+          )}
         </div>
       </div>
 
-      <div style={{ height: 260, marginTop: 12 }}>
+      <div style={{ height: 350 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={backlogData}
-            margin={{ top: 24, right: 12, left: 4, bottom: 8 }}
+            margin={{ top: 24, right: 12, left: 4, bottom: 48 }} // extra room for the second line
           >
             <CartesianGrid stroke="#E5E7EB" strokeDasharray="3 6" />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 12 }}
-              axisLine={{ stroke: "#E5E7EB" }}
               tickLine={false}
+              axisLine={{ stroke: "#E5E7EB" }}
+              // 👇 custom renderer shows category + value under the axis
+              tick={<XTickWithValue />}
             />
             <YAxis
               tick={{ fontSize: 12 }}
@@ -205,26 +259,6 @@ export function BacklogOfOverdueIncidents() {
                 <Cell key={i} fill={COLORS[d.key]} />
               ))}
             </Bar>
-
-            {/* Render the red "10hrs" callout for the item that has it */}
-            {backlogData.map((d, i) =>
-              d.callout ? (
-                <React.Fragment key={`callout-${i}`}>
-                  {/* Recharts provides coordinates via a custom label approach */}
-                  <Bar
-                    dataKey="value"
-                    opacity={0}
-                    label={(props: any) => (
-                      <Callout
-                        x={props.x + props.width / 2}
-                        y={props.y}
-                        text={d.callout!}
-                      />
-                    )}
-                  />
-                </React.Fragment>
-              ) : null
-            )}
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -288,7 +322,7 @@ export function PriorityDonut() {
   }, []);
 
   return (
-    <div className="tech-container h-[400px]">
+    <div className="tech-container min-h-[400px]">
       <div className="flex items-center justify-between gap-4">
         <div>
           <Text.SmallHeading>Open Issue count</Text.SmallHeading>
@@ -394,11 +428,127 @@ export function PriorityDonut() {
   );
 }
 
+const data = [
+  {
+    name: "P1",
+    uv: 2000,
+    pv: 0,
+    amt: 2290,
+  },
+  {
+    name: "P2",
+    uv: 2780,
+    pv: 3050,
+    amt: 2000,
+  },
+  {
+    name: "P3",
+    uv: 1890,
+    pv: 700,
+    amt: 2181,
+  },
+  {
+    name: "P4",
+    uv: 2390,
+    pv: 4000,
+    amt: 2500,
+  },
+];
+
+export const VolumeCharts = () => {
+  const color = Cookies.get("app-theme");
+  console.log();
+
+  const primaryColor = color && JSON.parse(color as string)?.primary;
+  return (
+    <div className="tech-container p-4">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+        className=""
+      >
+        <div>
+          <Text.SmallHeading className="text-lg font-semibold">
+            Issue Volume Trend
+          </Text.SmallHeading>
+
+          <div className="flex items-center gap-2">
+            <Text.Paragraph className="text-xs text-gray-400">
+              Ticket creation Volume over time
+            </Text.Paragraph>
+            <StatusItem
+              status="resolved"
+              name="21%"
+              icon
+              iconComponent={
+                <Image
+                  src={LOCAL_ICONS.incIcon}
+                  alt="Inc or dec icon"
+                  height={16}
+                  width={16}
+                />
+              }
+            />
+            <Text.Paragraph className="text-xs text-gray-400">
+              Since last year
+            </Text.Paragraph>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Dropdown>
+            <Dropdown.Trigger className="flex items-center justify-between">
+              Department
+            </Dropdown.Trigger>
+          </Dropdown>
+          <Dropdown>
+            <Dropdown.Trigger className="flex items-center justify-between">
+              Category
+            </Dropdown.Trigger>
+          </Dropdown>
+
+          <SlideToggler
+            slides={["Daily", "Weekly", "Monthly"]}
+            key="timeFrame"
+          />
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart
+          width={500}
+          height={200}
+          data={data}
+          syncId="anyId"
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Area
+            type="monotone"
+            dataKey="pv"
+            stroke={primaryColor?.[900]}
+            fill={primaryColor?.[500]}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
 export default function IncidentOverview() {
   return (
     <TableOverflow className="grid grid-cols-2 gap-4 !min-h-[400px]">
       <PriorityDonut />
-      <BacklogOfOverdueIncidents />
+      <BacklogOfOverdueIncidents fullLog={false} />
     </TableOverflow>
   );
 }

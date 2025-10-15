@@ -214,19 +214,8 @@ export default function ColorPaletteDialog({
         <button
           // disabled={!canSave}
           onClick={() => {
-            // 1) build full scales (50..900) for primary from the chosen hex
-            const theme = buildThemePayload({ primaryHex: hex });
-
-            // 2) persist for future loads
-            saveThemeToLocalStorage("app-theme", theme);
-
-            // 3) apply now (no rebuild)
-            applyThemeScales(theme);
-
             // 4) your existing callback (if you need it)
             onSave?.(hex);
-
-            router.push("/");
           }}
           style={{
             ["--btn" as any]: hex,

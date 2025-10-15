@@ -83,6 +83,15 @@ html {
   --font-mono: var(--font-geist-mono);
 }
 
+/* Hide scrollbar but keep scrollability */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 @layer utilities {
   .white-bg {
     @apply bg-white rounded-xl p-6;

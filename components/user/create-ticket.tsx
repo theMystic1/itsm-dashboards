@@ -247,14 +247,20 @@ export const Radio = ({
   );
 };
 
-export const EmptyUploader = ({ onClick }: { onClick?: () => void }) => {
+export const EmptyUploader = ({
+  onClick,
+  acceptedFormats = "Accepted formats: PNG, JPG, PDF, DOCX",
+}: {
+  onClick?: () => void;
+  acceptedFormats?: string;
+}) => {
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex items-center gap-2">
         <LuFileCheck2 className="text-primary-600" size={28} />
         <div className="flex flex-col justify-center  gap-2   rounded-lg">
           <Text.Paragraph className="text-sm text-gray-500">
-            Accepted formats: PNG, JPG, PDF, DOCX
+            {acceptedFormats}
           </Text.Paragraph>
           <Text.SmallText className="text-xs text-gray-400">
             (Max file size: 10MB)
