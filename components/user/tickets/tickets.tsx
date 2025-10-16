@@ -143,7 +143,7 @@ const Tickets = ({ type }: { type: "user" | "tech" }) => {
         onClose={() =>
           setOpenOtherModals((prev) => ({ ...prev, rightPortal: false }))
         }
-        title="Right Portal"
+        title="Ticket ID #1234567"
         closeOnBackdrop
         width={800}
       >
@@ -198,7 +198,7 @@ const Tickets = ({ type }: { type: "user" | "tech" }) => {
 
         {type === "tech" ? (
           <div className="my-5 flex flex-col gap-5">
-            <TicketMetrics isTicket />
+            <TicketMetrics isTicket tech={type === "tech"} />
 
             <Suspense>
               <TogleSlide
@@ -256,7 +256,16 @@ const Tickets = ({ type }: { type: "user" | "tech" }) => {
             </Thead>
             <Tbody>
               {dummyTickets?.map((tick) => (
-                <Tr key={tick.ticketId} className="border-b border-b-[#d4d4d4]">
+                <Tr
+                  key={tick.ticketId}
+                  className="border-b border-b-[#d4d4d4] cursor-pointer "
+                  onClick={() =>
+                    setOpenOtherModals((prev) => ({
+                      ...prev,
+                      rightPortal: true,
+                    }))
+                  }
+                >
                   <Td>
                     <Text.LinkText>{tick.ticketId}</Text.LinkText>
                   </Td>

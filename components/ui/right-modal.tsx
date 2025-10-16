@@ -107,7 +107,7 @@ export function RightSheet({
             aria-modal="true"
             aria-label={title || "Panel"}
             className={`fixed top-0 right-0 h-[100dvh] z-[9999] bg-white  shadow-2xl outline-none ${className}`}
-            style={{ width: "60%", maxWidth: "100vw" }}
+            style={{ width: "75%", maxWidth: "100vw" }}
             variants={sheet}
             initial="hidden"
             animate="visible"
@@ -117,7 +117,7 @@ export function RightSheet({
           >
             {/* Header */}
             <div className="sticky top-0 flex items-center justify-between gap-2 p-4 border-b border-neutral-200/70 dark:border-neutral-800">
-              <h2 className="text-base font-semibold text-primary-500 dark:text-neutral-100">
+              <h2 className="text-base font-semibold text-gray-400 ">
                 {title ?? "Panel"}
               </h2>
               <button onClick={onClose} className="">

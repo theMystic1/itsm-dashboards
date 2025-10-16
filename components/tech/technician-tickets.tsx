@@ -14,12 +14,18 @@ const TechTicks = () => {
   return <Tickets type="tech" />;
 };
 
-export const TicketMetrics = ({ isTicket }: { isTicket: boolean }) => {
-  const shitTorender = isTicket ? dummyTicketMetrics : dummyDashboardMetrics;
-
+export const TicketMetrics = ({
+  isTicket,
+  tech,
+}: {
+  isTicket: boolean;
+  tech: boolean;
+}) => {
+  const remder = isTicket ? dummyTicketMetrics : dummyDashboardMetrics;
+  const shitTorender = tech ? remder.slice(0, 3) : dummyTicketMetrics;
   const decIcon = isTicket ? LOCAL_ICONS.decIcon : LOCAL_ICONS.bad_marketIcon;
   return (
-    <section className={`${isTicket ? "grid-3" : "grid-2"}`}>
+    <section className={`${isTicket || tech ? "grid-3" : "grid-2"}`}>
       {shitTorender.map((mtr, i) => (
         <div
           className="tech-container flex items-start justify-between"

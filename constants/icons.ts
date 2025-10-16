@@ -18,6 +18,7 @@ import { CgNotes } from "react-icons/cg";
 import { IconType } from "react-icons";
 import { MdEmail } from "react-icons/md";
 import { PiPhone } from "react-icons/pi";
+import { PiUsersThree } from "react-icons/pi";
 
 import vectorIcon from "@/public/icons/Vector.png";
 import clockIcon from "@/public/icons/clock.png";
@@ -33,7 +34,7 @@ import bad_marketIcon from "@/public/icons/bad_market.png";
 export const ICONS = {
   dashboard: BiGridAlt,
   settings: BiCog,
-  user: BiUser,
+  user: PiUsersThree,
   issues: BiNotepad,
   analytics: BiLineChart,
   notifications: BiBell,

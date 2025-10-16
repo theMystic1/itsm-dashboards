@@ -3,10 +3,12 @@
 import React from "react";
 import { useSyncedSlide } from "./toggle-slide";
 
-type Props = { slides: string[]; key: string };
+type Props = { slides: string[]; paramKey: string };
 
-const SlideToggler = ({ slides, key }: Props) => {
-  const { activeSlide, setSlide } = useSyncedSlide(slides, slides[0], key);
+const SlideToggler = ({ slides, paramKey }: Props) => {
+  const { activeSlide, setSlide } = useSyncedSlide(slides, slides[0], paramKey);
+
+  // console.log(key);
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const btnRefs = React.useRef<Array<HTMLButtonElement | null>>([]);

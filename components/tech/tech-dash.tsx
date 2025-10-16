@@ -28,8 +28,8 @@ const TechnicianDashboardPage = () => {
         </LayoutHeader>
         <IncidentOverview />
 
+        <TicketMetrics isTicket={false} tech />
         <LengthRep />
-        <TicketMetrics isTicket={false} />
       </section>
     </main>
   );

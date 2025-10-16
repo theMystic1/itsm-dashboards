@@ -13,6 +13,11 @@ import { Activity, Istatus, NavItem } from "@/types/type";
 import dayjs from "dayjs";
 import { p } from "framer-motion/client";
 import { LOCAL_ICONS } from "./icons";
+import { PiUsersThree } from "react-icons/pi";
+import { BiUser } from "react-icons/bi";
+import { TbUsersMinus, TbUsersPlus } from "react-icons/tb";
+import { LiaUserShieldSolid } from "react-icons/lia";
+import { IMAGES } from "./images";
 
 // const { dashboard, settings, user, issues, analytics, notifications, audit } =
 //   ICONS;
@@ -20,7 +25,7 @@ import { LOCAL_ICONS } from "./icons";
 export const AdminLayoutLinks: NavItem = [
   { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
   { name: "Settings", href: "/settings", icon: "settings" },
-  { name: "User Management", href: "/users", icon: "user" },
+  { name: "Teams", href: "/teams", icon: "user" },
   { name: "Issue Logs", href: "/issues", icon: "issues" },
   { name: "Analytics & Reports", href: "/reports", icon: "analytics" },
   {
@@ -224,7 +229,7 @@ export const dummyTags: {
     type: "user",
     value: {
       name: "John Doe",
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
+      image: IMAGES.userLanding,
     },
   },
   {
@@ -241,7 +246,7 @@ export const activities: Activity[] = [
     actor: {
       id: "u-1",
       name: "Jacob Jones",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+      avatarUrl: IMAGES.userLanding,
     },
     at: dayjs().subtract(10, "minute").toISOString(),
     from: "open",
@@ -253,7 +258,7 @@ export const activities: Activity[] = [
     actor: {
       id: "u-1",
       name: "Jacob Jones",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+      avatarUrl: IMAGES.userLanding,
     },
     at: dayjs().subtract(1, "hour").toISOString(),
     ticketId: "#212501",
@@ -265,7 +270,7 @@ export const activities: Activity[] = [
     actor: {
       id: "u-2",
       name: "Bassey Bassey",
-      avatarUrl: "https://randomuser.me/api/portraits/men/62.jpg",
+      avatarUrl: IMAGES.userLanding,
     },
     at: dayjs().subtract(1, "day").toISOString(),
     ticketId: "#212501",
@@ -340,7 +345,7 @@ export const dummyTickets = [
     category: "Bug",
     assignedTo: {
       name: "Adaeze Okafor",
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Login button unresponsive on Safari iOS",
     priorityLevel: "high",
@@ -353,7 +358,7 @@ export const dummyTickets = [
     category: "Feature",
     assignedTo: {
       name: "James Cole",
-      image: "https://randomuser.me/api/portraits/men/12.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Add SSO with Azure AD",
     priorityLevel: "critical",
@@ -366,7 +371,7 @@ export const dummyTickets = [
     category: "Improvement",
     assignedTo: {
       name: "Fatima Bello",
-      image: "https://randomuser.me/api/portraits/women/22.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Optimize dashboard load time under 2s",
     priorityLevel: "medium",
@@ -379,7 +384,7 @@ export const dummyTickets = [
     category: "Bug",
     assignedTo: {
       name: "Wei Zhang",
-      image: "https://randomuser.me/api/portraits/men/71.jpg",
+      image: IMAGES.userLanding,
     },
     title: "CSV export includes hidden columns",
     priorityLevel: "low",
@@ -392,7 +397,7 @@ export const dummyTickets = [
     category: "Incident",
     assignedTo: {
       name: "Ijeoma N.",
-      image: "https://randomuser.me/api/portraits/women/49.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Spike in 500 errors on API v2",
     priorityLevel: "critical",
@@ -405,7 +410,7 @@ export const dummyTickets = [
     category: "Task",
     assignedTo: {
       name: "Rafael Dias",
-      image: "https://randomuser.me/api/portraits/men/83.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Refactor notification service",
     priorityLevel: "medium",
@@ -418,7 +423,7 @@ export const dummyTickets = [
     category: "Bug",
     assignedTo: {
       name: "Amina Yusuf",
-      image: "https://randomuser.me/api/portraits/women/37.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Time tracker rounding issue (minutes > 60)",
     priorityLevel: "high",
@@ -431,7 +436,7 @@ export const dummyTickets = [
     category: "Compliance",
     assignedTo: {
       name: "John Park",
-      image: "https://randomuser.me/api/portraits/men/28.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Update data retention policy to 7 years",
     priorityLevel: "low",
@@ -444,7 +449,7 @@ export const dummyTickets = [
     category: "Feature",
     assignedTo: {
       name: "Sara Ahmed",
-      image: "https://randomuser.me/api/portraits/women/12.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Introduce teams & roles switcher",
     priorityLevel: "high",
@@ -457,7 +462,7 @@ export const dummyTickets = [
     category: "Incident",
     assignedTo: {
       name: "Tomás Alvarez",
-      image: "https://randomuser.me/api/portraits/men/64.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Webhook retries failing after deploy",
     priorityLevel: "critical",
@@ -470,7 +475,7 @@ export const dummyTickets = [
     category: "Bug",
     assignedTo: {
       name: "Chika Obi",
-      image: "https://randomuser.me/api/portraits/women/80.jpg",
+      image: IMAGES.userLanding,
     },
     title: "UAT: SLA countdown freezes on tab switch",
     priorityLevel: "medium",
@@ -483,7 +488,7 @@ export const dummyTickets = [
     category: "Improvement",
     assignedTo: {
       name: "Liam O’Connor",
-      image: "https://randomuser.me/api/portraits/men/3.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Add pagination to Transactions table",
     priorityLevel: "low",
@@ -496,7 +501,7 @@ export const dummyTickets = [
     category: "Task",
     assignedTo: {
       name: "Ngozi Eze",
-      image: "https://randomuser.me/api/portraits/women/9.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Create runbook for on-call rotation",
     priorityLevel: "medium",
@@ -509,7 +514,7 @@ export const dummyTickets = [
     category: "Bug",
     assignedTo: {
       name: "Ravi Kumar",
-      image: "https://randomuser.me/api/portraits/men/55.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Search results ignore archived filters",
     priorityLevel: "high",
@@ -522,7 +527,7 @@ export const dummyTickets = [
     category: "Feature",
     assignedTo: {
       name: "Elena Petrova",
-      image: "https://randomuser.me/api/portraits/women/4.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Role-based access for Teams",
     priorityLevel: "high",
@@ -535,7 +540,7 @@ export const dummyTickets = [
     category: "Incident",
     assignedTo: {
       name: "Oluwatobi A.",
-      image: "https://randomuser.me/api/portraits/men/7.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Delayed queue processing in Kafka",
     priorityLevel: "critical",
@@ -548,7 +553,7 @@ export const dummyTickets = [
     category: "Improvement",
     assignedTo: {
       name: "Maya Singh",
-      image: "https://randomuser.me/api/portraits/women/28.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Sanitize user inputs for export names",
     priorityLevel: "low",
@@ -561,7 +566,7 @@ export const dummyTickets = [
     category: "Task",
     assignedTo: {
       name: "Hassan Ali",
-      image: "https://randomuser.me/api/portraits/men/92.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Migrate secrets to Vault",
     priorityLevel: "medium",
@@ -574,7 +579,7 @@ export const dummyTickets = [
     category: "Bug",
     assignedTo: {
       name: "Zara Mensah",
-      image: "https://randomuser.me/api/portraits/women/18.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Push notifications duplicated on Android",
     priorityLevel: "high",
@@ -587,7 +592,7 @@ export const dummyTickets = [
     category: "Compliance",
     assignedTo: {
       name: "Kenji Sato",
-      image: "https://randomuser.me/api/portraits/men/46.jpg",
+      image: IMAGES.userLanding,
     },
     title: "Add audit log for role edits",
     priorityLevel: "medium",
@@ -874,7 +879,6 @@ export const rulesById = [
   },
 ] as const;
 
-
 export const integrations = [
   {
     tool: "Slack",
@@ -937,3 +941,156 @@ export const integrations = [
     Notes: "Pushes updates to data lake",
   },
 ];
+
+export const teamsDummyFilter = {
+  roles: ["End users", "Technicians", "Team Lead", "Admin"],
+  status: ["Activ", "In-active"],
+  department: [
+    "Infrastructure",
+    "Networking",
+    "Hardware",
+    "Technical Support",
+    "Cloud Service",
+    "System Admin",
+  ],
+};
+
+export const teamsStats = {
+  users: [
+    {
+      name: "Total active users",
+      value: 20,
+      Icon: PiUsersThree,
+    },
+    {
+      name: "No. of End users",
+      value: 8,
+      Icon: BiUser,
+    },
+    {
+      name: "No. of Technicians",
+      value: 5,
+      Icon: BiUser,
+    },
+    {
+      name: "No. of IT managers",
+      value: 5,
+      Icon: BiUser,
+    },
+    {
+      name: "No. of Admins",
+      value: 4,
+      Icon: LiaUserShieldSolid,
+    },
+    {
+      name: "No. of inactive users",
+      value: 2,
+      Icon: TbUsersMinus,
+    },
+  ],
+};
+
+export const rechartDummies = {
+  cat: [
+    "Bug / Error",
+    "Feature Request",
+    "Network",
+    "Security",
+    "User interface",
+    "Cloud Computing",
+  ],
+  dept: [
+    "Technical Support",
+    "Network & Infrastructure",
+    "Application Services",
+    "Cybersecurity",
+    "Hardware Management",
+  ],
+
+  priority: ["P1 (Critical)", "P2 (High)", "P3 (Medium)", "P4 (Low)"],
+};
+
+export const tabs = [
+  "All",
+  "Active",
+  "End Users",
+  "Technicians",
+  "IT managers",
+  "Admins",
+  "Inactive",
+];
+
+export const teamsDummy = {
+  tabs,
+  table_heading: [
+    "Name",
+    "Role",
+    "Department",
+    "Status",
+    "Tickets Assigned",
+    "Last Login",
+    "Action",
+  ],
+  tableData: [
+    {
+      name: "Paul Feng",
+      role: "End user",
+      department: "IT",
+      ticketsAssigned: 5,
+      status: "active",
+      lastLogin: new Date(),
+      image: IMAGES.userLanding,
+      id: 1,
+    },
+    {
+      name: "Jeremy Doku",
+      role: "Admin",
+      department: "Networking",
+      ticketsAssigned: 8,
+      status: "active",
+      lastLogin: new Date(),
+      image: IMAGES.userLanding,
+      id: 2,
+    },
+    {
+      name: "Alexandar Isak",
+      role: "End user",
+      department: "Infrastructure",
+      ticketsAssigned: 4,
+      status: "inactive",
+      lastLogin: new Date(),
+      image: IMAGES.userLanding,
+      id: 3,
+    },
+    {
+      name: "Mohammed Salah",
+      role: "End user",
+      department: "Sports",
+      ticketsAssigned: 3,
+      status: "active",
+      lastLogin: new Date(),
+      image: IMAGES.userLanding,
+      id: 4,
+    },
+    {
+      name: "Erling Haaland",
+      role: "Admin",
+      department: "sports",
+      ticketsAssigned: 0,
+      status: "active",
+      lastLogin: new Date(),
+      image: IMAGES.userLanding,
+      id: 5,
+    },
+    {
+      name: "Declan rice",
+      role: "Technician",
+      department: "IT",
+      ticketsAssigned: 0,
+      status: "active",
+      lastLogin: new Date(),
+      image: IMAGES.userLanding,
+      id: 6,
+    },
+  ],
+};

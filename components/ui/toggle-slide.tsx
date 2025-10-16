@@ -7,22 +7,24 @@ import Text from "./text";
 export const useSyncedSlide = (
   slides: string[],
   defaultSlide: string,
-  paramKey = "slide"
+  paramKey?: string
 ) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const initial = useMemo(() => {
-    const fromUrl = searchParams.get(paramKey);
+    const fromUrl = searchParams.get(paramKey || "slide");
     return slides.includes(fromUrl || "") ? (fromUrl as string) : defaultSlide;
   }, [searchParams, paramKey, slides, defaultSlide]);
 
   const [activeSlide, setActiveSlide] = useState(initial);
 
+  // console.log(paramKey);
+
   // keep state in sync if URL changes (e.g., back/forward)
   useEffect(() => {
-    const current = searchParams.get(paramKey);
+    const current = searchParams.get(paramKey || "slide");
     if (current && slides.includes(current) && current !== activeSlide) {
       setActiveSlide(current);
     }
@@ -31,7 +33,7 @@ export const useSyncedSlide = (
 
   const updateUrl = (next: string) => {
     const sp = new URLSearchParams(searchParams.toString());
-    sp.set(paramKey, next);
+    sp.set(paramKey || "slide", next);
     router.replace(`${pathname}?${sp.toString()}`, { scroll: false });
   };
 

@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "culori": "^4.0.2",
     "dayjs": "^1.11.18",
     "emoji-picker-react": "^4.14.0",

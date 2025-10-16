@@ -21,7 +21,7 @@ const ConfirmModal = ({
   onCancel?: () => void;
 }) => {
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className="">
       <div className="flex flex-col items-center gap-2 py-">
         <div className="h-16 w-16 rounded-full bg-primary-500/10 flex items-center justify-center relative">
           <HiOutlineMegaphone className="text-primary-500" size={32} />
@@ -31,11 +31,12 @@ const ConfirmModal = ({
         </Text.SubHeading>
         <Text.Paragraph className="text-xs">{description}</Text.Paragraph>
 
-        <div className="grid grid-cols-2 gap-3 w-full">
+        <div className="flex items-center gap-2 w-full">
           <Button
             // className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
             onClick={onCancel}
             variant="secondary_2"
+            className="w-full text-xs"
           >
             {cancelBtn || "Cancel"}
           </Button>
@@ -43,6 +44,7 @@ const ConfirmModal = ({
           <Button
             // className="px-4 py-2 bg-primary-500 text-white rounded hover:bg-primary-600 transition"
             onClick={onConfirm}
+            className="w-full text-xs"
           >
             {confirmBtn || "Confirm"}
           </Button>

@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 
 export default function ClientLayouts({
   navLinks,
-  width = 280,
+  width = 240,
   children,
 }: {
   navLinks: NavItem;

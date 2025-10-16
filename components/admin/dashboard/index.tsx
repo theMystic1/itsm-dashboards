@@ -31,10 +31,10 @@ const AdminDashboardPage = () => {
           <></>
         </LayoutHeader>
         <IncidentOverview />
-        <TicketMetrics isTicket={false} />
         <VolumeCharts />
-        <BacklogOfOverdueIncidents fullLog />
+        <TicketMetrics isTicket={false} tech />
         <LengthRep />
+        <BacklogOfOverdueIncidents fullLog />
       </section>
     </main>
   );

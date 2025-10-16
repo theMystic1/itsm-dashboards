@@ -23,6 +23,7 @@ import StatusItem from "./status";
 import Image from "next/image";
 import { LOCAL_ICONS } from "@/constants/icons";
 import SlideToggler from "./slides-toggler";
+import { rechartDummies } from "@/constants/constant";
 
 // ---------- Shared ----------
 type PriorityKey = "P1" | "P2" | "P3" | "P4";
@@ -171,6 +172,8 @@ export function BacklogOfOverdueIncidents({
   data?: any[];
   fullLog: boolean;
 }) {
+  const { dept, cat } = rechartDummies;
+
   return (
     <div className="tech-container min-h-[400px]">
       <div
@@ -214,17 +217,27 @@ export function BacklogOfOverdueIncidents({
             <Dropdown.Trigger className="flex items-center justify-between">
               Department
             </Dropdown.Trigger>
+            <Dropdown.Content>
+              {dept.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
           <Dropdown>
             <Dropdown.Trigger className="flex items-center justify-between">
               Category
             </Dropdown.Trigger>
+            <Dropdown.Content>
+              {cat.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
 
           {fullLog && (
             <SlideToggler
               slides={["This Week", "This Year", "This Month"]}
-              key={"duration"}
+              paramKey={"duration"}
             />
           )}
         </div>
@@ -321,6 +334,8 @@ export function PriorityDonut() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  const { dept, cat } = rechartDummies;
+
   return (
     <div className="tech-container min-h-[400px]">
       <div className="flex items-center justify-between gap-4">
@@ -335,27 +350,27 @@ export function PriorityDonut() {
             <Dropdown.Trigger className="flex items-center justify-between">
               Department
             </Dropdown.Trigger>
+
+            <Dropdown.Content>
+              {dept.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
           <Dropdown>
             <Dropdown.Trigger className="flex items-center justify-between">
               Category
             </Dropdown.Trigger>
+
+            <Dropdown.Content>
+              {cat.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
         </div>
       </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 200px",
-          alignItems: "center",
-          gap: 24,
-          background: "white",
-
-          padding: 16,
-          width: "100%",
-        }}
-        className="flex-1"
-      >
+      <div className="flex-1 grid grid-cols-[1fr_0.4fr] w-full items-center p-4 gap-4">
         <div className="flex-1 h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -409,17 +424,19 @@ export function PriorityDonut() {
           </ResponsiveContainer>
         </div>
 
-        <div style={{ display: "grid", gap: 10 }}>
+        <div className="">
           {donutData.map((d) => (
-            <div
-              key={d.key}
-              style={{ display: "flex", alignItems: "center", gap: 2 }}
-            >
+            <div key={d.key} className="flex items-center gap-2">
               <Dot color={COLORS[d.key]} />
-              <div style={{ fontWeight: 600, minWidth: 140 }}>
+              <div
+                style={{ fontWeight: 600, minWidth: 140 }}
+                className="text-xs"
+              >
                 {PRIO_LABEL[d.key]}
               </div>
-              <div style={{ color: "#6B7280" }}>{d.value}</div>
+              <div style={{ color: "#6B7280" }} className="text-xs">
+                {d.value}
+              </div>
             </div>
           ))}
         </div>
@@ -427,37 +444,26 @@ export function PriorityDonut() {
     </div>
   );
 }
-
 const data = [
-  {
-    name: "P1",
-    uv: 2000,
-    pv: 0,
-    amt: 2290,
-  },
-  {
-    name: "P2",
-    uv: 2780,
-    pv: 3050,
-    amt: 2000,
-  },
-  {
-    name: "P3",
-    uv: 1890,
-    pv: 700,
-    amt: 2181,
-  },
-  {
-    name: "P4",
-    uv: 2390,
-    pv: 4000,
-    amt: 2500,
-  },
+  { name: "Jan", uv: 1200, pv: 900, amt: 1100 },
+  { name: "Feb", uv: 1050, pv: 250, amt: 1180 },
+  { name: "Mar", uv: 1200, pv: 900, amt: 1400 },
+  { name: "Apr", uv: 1050, pv: 300, amt: 1600 },
+  { name: "May", uv: 1900, pv: 950, amt: 1780 },
+  { name: "Jun", uv: 2100, pv: 450, amt: 1950 },
+  { name: "Jul", uv: 2250, pv: 900, amt: 2100 },
+  { name: "Aug", uv: 2400, pv: 400, amt: 2250 },
+  { name: "Sep", uv: 2000, pv: 800, amt: 2050 },
+  { name: "Oct", uv: 1850, pv: 900, amt: 1880 },
+  { name: "Nov", uv: 1650, pv: 200, amt: 1680 },
+  { name: "Dec", uv: 1800, pv: 950, amt: 1900 },
 ];
 
 export const VolumeCharts = () => {
   const color = Cookies.get("app-theme");
-  console.log();
+  // console.log();
+
+  const { dept, priority } = rechartDummies;
 
   const primaryColor = color && JSON.parse(color as string)?.primary;
   return (
@@ -498,20 +504,31 @@ export const VolumeCharts = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Dropdown>
+          <Dropdown className="">
             <Dropdown.Trigger className="flex items-center justify-between">
               Department
             </Dropdown.Trigger>
+            <Dropdown.Content>
+              {dept.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
-          <Dropdown>
+          <Dropdown className="">
             <Dropdown.Trigger className="flex items-center justify-between">
-              Category
+              Priority
             </Dropdown.Trigger>
+
+            <Dropdown.Content>
+              {priority.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
 
           <SlideToggler
             slides={["Daily", "Weekly", "Monthly"]}
-            key="timeFrame"
+            paramKey="timeFrame"
           />
         </div>
       </div>
@@ -554,6 +571,7 @@ export default function IncidentOverview() {
 }
 
 export const LengthRep = () => {
+  const { dept, cat } = rechartDummies;
   return (
     <div className="tech-container flex-col flex gap-4">
       <div className="flex items-center justify-between gap-4">
@@ -599,11 +617,23 @@ export const LengthRep = () => {
             <Dropdown.Trigger className="flex items-center justify-between">
               Department
             </Dropdown.Trigger>
+
+            <Dropdown.Content className="min-w-[160px]">
+              {dept.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
           <Dropdown>
             <Dropdown.Trigger className="flex items-center justify-between">
               Category
             </Dropdown.Trigger>
+
+            <Dropdown.Content className="min-w-[140px]">
+              {cat.map((de, i) => (
+                <Dropdown.Item key={i}>{de}</Dropdown.Item>
+              ))}
+            </Dropdown.Content>
           </Dropdown>
         </div>
       </div>
