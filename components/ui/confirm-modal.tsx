@@ -32,22 +32,26 @@ const ConfirmModal = ({
         <Text.Paragraph className="text-xs">{description}</Text.Paragraph>
 
         <div className="flex items-center gap-2 w-full">
-          <Button
-            // className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
-            onClick={onCancel}
-            variant="secondary_2"
-            className="w-full text-xs"
-          >
-            {cancelBtn || "Cancel"}
-          </Button>
+          {cancelBtn && (
+            <Button
+              // className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+              onClick={onCancel}
+              variant="secondary_2"
+              className="w-full text-xs"
+            >
+              {cancelBtn || "Cancel"}
+            </Button>
+          )}
 
-          <Button
-            // className="px-4 py-2 bg-primary-500 text-white rounded hover:bg-primary-600 transition"
-            onClick={onConfirm}
-            className="w-full text-xs"
-          >
-            {confirmBtn || "Confirm"}
-          </Button>
+          {confirmBtn && (
+            <Button
+              // className="px-4 py-2 bg-primary-500 text-white rounded hover:bg-primary-600 transition"
+              onClick={onConfirm}
+              className="w-full text-xs"
+            >
+              {confirmBtn || "Confirm"}
+            </Button>
+          )}
         </div>
       </div>
     </div>

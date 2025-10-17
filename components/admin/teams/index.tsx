@@ -9,7 +9,7 @@ import UserProffileHeader from "@/components/ui/user-profile";
 import { LayoutHeader } from "@/components/user/tickets/tickets";
 import { teamsDummy, teamsDummyFilter, teamsStats } from "@/constants/constant";
 import Image, { StaticImageData } from "next/image";
-import { BiMenu, BiSearch } from "react-icons/bi";
+import { BiEdit, BiMenu, BiSearch } from "react-icons/bi";
 import { MdAdd } from "react-icons/md";
 import { Checkbox } from "../settings/SLA-policies";
 import { IoCloseCircleOutline } from "react-icons/io5";
@@ -18,18 +18,22 @@ import { PiHamburger } from "react-icons/pi";
 import { LuEllipsisVertical } from "react-icons/lu";
 import { Column, Row } from "@/components/user/create-ticket";
 import Modal from "@/components/ui/customModal";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import ConfirmModal, {
   LoadingModal,
   SuccessModal,
 } from "@/components/ui/confirm-modal";
 import DropdownMenu, { MenuItem } from "@/components/ui/table-dropdown";
+import { HiOutlinePencilAlt } from "react-icons/hi";
+import { IoIosRemoveCircleOutline } from "react-icons/io";
+import { TfiReload } from "react-icons/tfi";
 
 const TeamsPage = () => {
   const slides = ["Teams", "Users"];
   const [open, setOpen] = useState(false);
   const { activeSlide, setSlide } = useSyncedSlide(slides, "Teams", "toggle");
   const { roles, status, department } = teamsDummyFilter;
+  const [dataToRender, setDataToRender] = useState<any[]>([]);
   const { users } = teamsStats;
 
   const [openOtherModals, setOpenOtherModals] = useState({
@@ -37,12 +41,32 @@ const TeamsPage = () => {
     confirm: false,
     rightPortal: false,
     successModal: false,
+    deactivate: false,
+    reset: false,
   });
   const [edit, setEdit] = useState<{
     isEdit: boolean;
     editData: any;
   }>({
     isEdit: false,
+    editData: null,
+  });
+
+  const [openDeactivate, setOpenDeactivate] = useState<{
+    open: boolean;
+    reassignedUser: any;
+    reason: string;
+  }>({
+    open: false,
+    reassignedUser: null,
+    reason: "",
+  });
+
+  const [view, setView] = useState<{
+    open: boolean;
+    editData: any;
+  }>({
+    open: false,
     editData: null,
   });
 
@@ -60,9 +84,33 @@ const TeamsPage = () => {
     return () => clearTimeout(t);
   }, [openOtherModals.loading]);
 
-  const { tableData, table_heading, tabs } = teamsDummy;
+  const { tableData, table_heading, tabs, teamsTabData, teams_tabH } =
+    teamsDummy;
   const { activeSlide: activeTableSlide, setSlide: setTableSlide } =
     useSyncedSlide(slides, tabs[0], "table_slide");
+
+  useEffect(() => {
+    const lowercaseSlide = activeTableSlide.toLowerCase();
+
+    console.log(lowercaseSlide);
+    if (lowercaseSlide === "all") {
+      setDataToRender(tableData);
+      return;
+    }
+    const filteredData = tableData.filter((td) => {
+      // if (lowercaseSlide === "all") return;
+      console.log(td.role);
+
+      return (
+        lowercaseSlide.includes(td.department.toLowerCase()) ||
+        lowercaseSlide.includes(td.role.toLowerCase()) ||
+        lowercaseSlide === td.status.toLowerCase() ||
+        lowercaseSlide.includes(td.department.toLowerCase())
+      );
+    });
+
+    setDataToRender(filteredData);
+  }, [activeTableSlide, tableData]);
 
   const items: MenuItem[] = [
     {
@@ -77,12 +125,15 @@ const TeamsPage = () => {
 
       // danger: true,
       onSelect: () => {
-        // TODO: plug cancel logic here
+        setOpenDeactivate((pre) => ({
+          ...pre,
+          open: true,
+        }));
       },
     },
   ];
 
-  console.log(edit.editData, edit.isEdit);
+  // console.log(edit.editData, edit.isEdit);
   return (
     <main className="flex flex-col gap-5 min-h-screen">
       <Modal
@@ -116,7 +167,11 @@ const TeamsPage = () => {
         maxWidth="max-w-sm"
       >
         <LoadingModal
-          title="Submitting Request"
+          title={
+            openOtherModals.deactivate
+              ? "Deactivating..."
+              : "Submitting Request"
+          }
           description="Please wait a moment"
         />
       </Modal>
@@ -125,12 +180,24 @@ const TeamsPage = () => {
         isOpen={openOtherModals.confirm}
         maxWidth="max-w-sm"
         onClose={() =>
-          setOpenOtherModals((prev) => ({ ...prev, confirm: false }))
+          setOpenOtherModals((prev) => ({
+            ...prev,
+            confirm: false,
+            reset: false,
+          }))
         }
       >
         <ConfirmModal
-          title="Confirm Create User"
-          description="This action will Create a new user"
+          title={
+            openOtherModals.reset
+              ? "Confirm Password reset?"
+              : "Confirm Create User"
+          }
+          description={
+            openOtherModals.reset
+              ? "This action will reset the users password"
+              : "This action will Create a new user"
+          }
           confirmBtn="Yes, Proceed"
           cancelBtn="No, go back"
           onConfirm={() => {
@@ -141,28 +208,192 @@ const TeamsPage = () => {
             }));
           }}
           onCancel={() => {
+            if (openOtherModals.reset) {
+              setView((prev) => ({
+                ...prev,
+                open: true,
+              }));
+              setOpenOtherModals((prev) => ({
+                ...prev,
+                confirm: false,
+              }));
+
+              return;
+            }
+
             setOpenOtherModals((prev) => ({ ...prev, confirm: false }));
             setOpen(true);
           }}
         />
       </Modal>
       <Modal
+        isOpen={openDeactivate.open}
+        onClose={() =>
+          setOpenDeactivate({
+            open: true,
+            reassignedUser: null,
+            reason: "",
+          })
+        }
+        maxWidth="max-w-sm"
+      >
+        <div className="flex flex-col gap-4">
+          <ConfirmModal
+            title={"Confirm Deactivation"}
+            description="This will revoke access and pause all assignments"
+          />
+
+          <Column>
+            <Text.SmallHeading className="text-sm font-bold">
+              Reassign ticket to
+            </Text.SmallHeading>
+            <Dropdown>
+              <Dropdown.Trigger className="flex items-center justify-between">
+                {openDeactivate?.reassignedUser?.name || "Reassign user"}
+              </Dropdown.Trigger>
+              <Dropdown.Content>
+                {tableData.map((usr, i) => (
+                  <Dropdown.Item className="" key={i}>
+                    {usr.name}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Content>
+            </Dropdown>
+          </Column>
+          <Column>
+            <Text.SmallHeading className="text-sm font-bold">
+              Reason
+            </Text.SmallHeading>
+            <div className="input-container">
+              <input
+                type="text"
+                className="text-input"
+                placeholder="Enter reason for deactivation"
+              />
+            </div>
+          </Column>
+          <div className="flex items-center gap-3 w-full">
+            <Button
+              variant="secondary_2"
+              className="w-full"
+              onClick={() => {
+                setOpenDeactivate({
+                  reason: "",
+                  reassignedUser: null,
+                  open: false,
+                });
+
+                setOpenOtherModals((ptrv) => ({ ...ptrv, deactivate: false }));
+              }}
+            >
+              No, Cancel
+            </Button>
+            <Button
+              className="w-full"
+              onClick={() => {
+                setOpenOtherModals((ptrv) => ({
+                  ...ptrv,
+                  deactivate: true,
+                  loading: true,
+                }));
+
+                setOpenDeactivate((pre) => ({
+                  ...pre,
+                  open: false,
+                }));
+              }}
+            >
+              Yes, Confirm
+            </Button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
         isOpen={openOtherModals.successModal}
         maxWidth="max-w-sm"
         onClose={() =>
-          setOpenOtherModals((prev) => ({ ...prev, successModal: false }))
+          setOpenOtherModals((prev) => ({
+            ...prev,
+            successModal: false,
+            reset: false,
+          }))
         }
       >
         <SuccessModal
-          title="User Created successfully"
-          description="You Created a new user successfully"
+          title={
+            openOtherModals.deactivate
+              ? "User deactivated successfully"
+              : openOtherModals.reset
+              ? "Password reset successful"
+              : "User Created successfully"
+          }
+          description={
+            openOtherModals.deactivate
+              ? "We've deactivated this user, you can reactivate this user in the user management settings"
+              : openOtherModals.reset
+              ? "You have successfully reset password"
+              : "You Created a new user successfully"
+          }
           confirmBtn="Okay"
           onConfirm={() => {
             setOpenOtherModals((prev) => ({
               ...prev,
               successModal: false,
               rightPortal: false,
+              deactivate: false,
+              reset: false,
             }));
+          }}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={view.open}
+        onClose={() =>
+          setView((prev) => ({
+            ...prev,
+            open: false,
+            editData: null,
+          }))
+        }
+      >
+        <UserItemModal
+          onEdit={() => {
+            setEdit({
+              isEdit: true,
+              editData: view.editData,
+            });
+
+            setOpen(true);
+            setView((prev) => ({
+              ...prev,
+              open: false,
+            }));
+          }}
+          onDeactivate={() => {
+            setOpenDeactivate((prv) => ({ ...prv, open: true }));
+            setView((prev) => ({
+              ...prev,
+              open: false,
+            }));
+          }}
+          editData={view.editData}
+          onReset={() => {
+            setOpenOtherModals((prev) => ({
+              ...prev,
+              reset: true,
+              confirm: true,
+            }));
+
+            setEdit((pr) => ({
+              ...pr,
+              isEdit: false,
+            }));
+            setView((prev) => ({
+              ...prev,
+              open: false,
+            }));
+            setOpen(false);
           }}
         />
       </Modal>
@@ -280,8 +511,21 @@ const TeamsPage = () => {
                   ))}
                 </Tr>
 
-                {tableData.map((sla) => (
-                  <Tr key={sla.id} className="border-b border-b-gray-200">
+                {dataToRender.map((sla) => (
+                  <Tr
+                    key={sla.id}
+                    className="border-b border-b-gray-200 cursor-pointer "
+                    onClick={() =>
+                      setView({
+                        open: true,
+                        editData: {
+                          ...sla,
+                          tempPassword: "jdhjuec",
+                          email: "bassey.basse@mail.ru",
+                        },
+                      })
+                    }
+                  >
                     <Td>
                       <span className="flex items-center gap-2">
                         <Image
@@ -345,7 +589,85 @@ const TeamsPage = () => {
             </TableOverflow>
           </>
         ) : (
-          <></>
+          <TableOverflow>
+            <Table>
+              <Tr className="border-b border-b-gray-200">
+                {teams_tabH?.map((thd) => (
+                  <Th key={thd}>{thd}</Th>
+                ))}
+              </Tr>
+
+              {teamsTabData.map((sla) => (
+                <Tr
+                  key={sla.id}
+                  className="border-b border-b-gray-200 cursor-pointer "
+                  onClick={() =>
+                    setView({
+                      open: true,
+                      editData: {
+                        ...sla,
+                        tempPassword: "jdhjuec",
+                        email: "bassey.basse@mail.ru",
+                      },
+                    })
+                  }
+                >
+                  <Td>{sla.name}</Td>
+                  <Td>
+                    <span className="flex items-center gap-2">
+                      <Image
+                        src={sla.teamLead.image}
+                        height={16}
+                        width={16}
+                        alt="User image"
+                        className="rounded-full object-cover"
+                      />
+                      <p>{sla.teamLead.name}</p>
+                    </span>
+                  </Td>
+
+                  <Td>{sla.members}</Td>
+                  <Td>
+                    <span className="flex items-center gap-2">
+                      {sla.status === "active" ? (
+                        <Checkbox active={sla.status === "active"} />
+                      ) : (
+                        <IoCloseCircleOutline color="#c90707" size={20} />
+                      )}
+                      <Text.SmallText className="capitalize">
+                        {sla.status}
+                      </Text.SmallText>
+                    </span>
+                  </Td>
+
+                  <Td
+                    onClick={() => {
+                      console.log("clicked");
+                      setEdit({
+                        isEdit: true,
+                        editData: {
+                          ...sla,
+                          tempPassword: "jdhjuec",
+                          email: "bassey.basse@mail.ru",
+                        },
+                      });
+                    }}
+                  >
+                    <DropdownMenu
+                      trigger={
+                        <button className="w-10 h-8 rounded-md bg-gray-50 hover:bg-gray-100 text-gray-700 flex items-center justify-center">
+                          <LuEllipsisVertical />
+                        </button>
+                      }
+                      items={items}
+                      align="end"
+                      sideOffset={6}
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Table>
+          </TableOverflow>
         )}
       </section>
     </main>
@@ -353,6 +675,144 @@ const TeamsPage = () => {
 };
 
 export default TeamsPage;
+
+const UserItemModal = ({
+  onReset,
+  onDeactivate,
+  onEdit,
+  editData,
+}: {
+  onEdit?: () => void;
+  onReset?: () => void;
+  onDeactivate?: () => void;
+  editData: {
+    name: string;
+    email: string;
+    role: string;
+    reason: string;
+    tempPassword: string;
+    department: string;
+    ticketsAssigned: number;
+    status: string;
+    lastLogin: Date;
+    image: StaticImageData;
+    id: number;
+  };
+}) => {
+  console.log(editData);
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="py-2 flex items-center justify-center border-b border-b-gray-300">
+        <Text.Paragraph>{editData?.name}</Text.Paragraph>
+      </div>
+
+      <Image
+        src={editData?.image}
+        height={90}
+        width={90}
+        alt="User image"
+        className="rounded-full object-cover"
+      />
+
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Full Name:
+        </Text.SmallHeading>
+        <Text.Paragraph className=" !text-sm">{editData.name}</Text.Paragraph>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Role:
+        </Text.SmallHeading>
+        <Text.Paragraph className="!text-sm">{editData.role}</Text.Paragraph>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Department:
+        </Text.SmallHeading>
+        <Text.Paragraph className="!text-sm">
+          {editData.department}
+        </Text.Paragraph>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Email:
+        </Text.SmallHeading>
+        <Text.Paragraph className="!text-sm">{editData.email}</Text.Paragraph>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Account status:
+        </Text.SmallHeading>
+        <div className="flex items-center gap-1">
+          {editData?.status?.toLowerCase() === "active" ? (
+            <Checkbox active />
+          ) : (
+            <IoCloseCircleOutline color="#c90707" size={20} />
+          )}
+          <Text.Paragraph className=" !text-sm capitalize">
+            {editData.status}
+          </Text.Paragraph>
+        </div>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Tickets Assigned:
+        </Text.SmallHeading>
+        <Text.Paragraph className=" !text-sm">
+          {editData.ticketsAssigned}
+        </Text.Paragraph>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          SLA Compliance:
+        </Text.SmallHeading>
+        <Text.Paragraph className=" !text-sm">93%</Text.Paragraph>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Avg MTTR:
+        </Text.SmallHeading>
+        <Text.Paragraph className=" !text-sm">2h 58m</Text.Paragraph>
+      </RowGrid>
+      <RowGrid>
+        <Text.SmallHeading className="!font-bold !text-sm">
+          Last login:
+        </Text.SmallHeading>
+        <Text.Paragraph className=" !text-sm">
+          {`${formatDateProper(editData.lastLogin)}, ${formatTo12Hour(
+            editData.lastLogin
+          )}`}
+        </Text.Paragraph>
+      </RowGrid>
+
+      <div className="border-t border-t-gray-300 py-2 grid grid-cols-3 gap-2">
+        <Button variant="secondary_2" onClick={onEdit}>
+          <Button.Icon>
+            <HiOutlinePencilAlt size={20} />
+          </Button.Icon>
+          <Button.Text>Edit</Button.Text>
+        </Button>
+        <Button variant="secondary_2" onClick={onReset}>
+          <Button.Icon>
+            <TfiReload size={20} />
+          </Button.Icon>
+          <Button.Text>Reset Password</Button.Text>
+        </Button>
+        <Button variant="secondary_2" onClick={onDeactivate}>
+          <Button.Icon>
+            <IoIosRemoveCircleOutline size={20} />
+          </Button.Icon>
+          <Button.Text>Deactivate</Button.Text>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const RowGrid = ({ children }: { children: ReactNode }) => {
+  return <div className="grid grid-cols-[200px_1fr] gap-2">{children}</div>;
+};
 
 const UserModal = ({
   type = "new",

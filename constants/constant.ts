@@ -1020,6 +1020,14 @@ export const tabs = [
   "Inactive",
 ];
 
+export const teams_tabH = [
+  "Team Name",
+  "Team Lead",
+  "Members",
+  "Status",
+  "Action",
+];
+
 export const teamsDummy = {
   tabs,
   table_heading: [
@@ -1031,6 +1039,7 @@ export const teamsDummy = {
     "Last Login",
     "Action",
   ],
+  teams_tabH,
   tableData: [
     {
       name: "Paul Feng",
@@ -1091,6 +1100,48 @@ export const teamsDummy = {
       lastLogin: new Date(),
       image: IMAGES.userLanding,
       id: 6,
+    },
+  ],
+  teamsTabData: [
+    {
+      name: "Infrastructure",
+      teamLead: {
+        name: "Jasper Stark",
+        image: IMAGES.userLanding,
+      },
+      members: 12,
+      status: "active",
+      id: 1,
+    },
+    {
+      name: "Networking",
+      teamLead: {
+        name: "Lucky Dube",
+        image: IMAGES.userLanding,
+      },
+      members: 18,
+      status: "active",
+      id: 2,
+    },
+    {
+      name: "Cloud services",
+      teamLead: {
+        name: "Alicia Bundmat",
+        image: IMAGES.userLanding,
+      },
+      members: 6,
+      status: "active",
+      id: 3,
+    },
+    {
+      name: "System Admin",
+      teamLead: {
+        name: "Takeiheiro Tomiyasu",
+        image: IMAGES.userLanding,
+      },
+      members: 19,
+      status: "active",
+      id: 4,
     },
   ],
 };
